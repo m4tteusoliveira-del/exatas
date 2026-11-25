@@ -1,0 +1,39 @@
+EXATAS PARA ENGENHARIA - COMO COLOCAR O APP NO AR (GRÁTIS, PELO GITHUB PAGES)
+
+1. Crie uma conta grátis em https://github.com (se ainda não tiver).
+
+2. Crie um repositório:
+   - Clique no "+" no canto superior direito > "New repository".
+   - Nome: exatas (ou outro nome, sem espaços).
+   - Marque "Public" e clique em "Create repository".
+
+3. Envie os arquivos:
+   - Na página do repositório, clique em "uploading an existing file".
+   - Arraste TUDO o que está dentro desta pasta (index.html, sw.js,
+     manifest.webmanifest e a pasta icons). Não arraste a pasta de fora,
+     só o conteúdo dela.
+   - Clique em "Commit changes".
+
+4. Ligue o site:
+   - Vá em "Settings" > "Pages".
+   - Em "Branch", escolha "main" e a pasta "/ (root)". Clique em "Save".
+   - Espere 1 a 2 minutos. O endereço aparece no topo da página:
+     https://SEU-USUARIO.github.io/exatas/
+
+5. Instale no celular:
+   - Android (Chrome): abra o endereço e toque em "Instalar app" na tela
+     inicial do app (ou menu de três pontinhos > "Instalar app").
+   - iPhone (Safari): abra o endereço, toque em Compartilhar >
+     "Adicionar à Tela de Início".
+
+Depois de aberto uma vez, o app funciona sem internet.
+
+PARA ATUALIZAR O APP NO FUTURO
+   - Envie o novo index.html para o repositório (substituindo o antigo).
+   - No arquivo sw.js, troque "exatas-v2" por "exatas-v3" (e assim por
+     diante) e envie também. Isso faz os celulares baixarem a versão nova.
+
+PROGRESSO ENTRE APARELHOS
+   - Na aba Progresso, toque em "Copiar código de backup", mande o código
+     para você mesmo (WhatsApp, e-mail) e cole no outro aparelho em
+     "Colar código" > "Restaurar".

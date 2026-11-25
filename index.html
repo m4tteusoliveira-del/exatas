@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2557d6">
+<title>Exatas para Engenharia</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Exatas Eng">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="Matemática, Física e Química para engenharia, do básico ao avançado, com explicações, fórmulas e exemplos resolvidos.">
+<link rel="alternate icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%232557d6%27/%3E%3Ctext x=%2732%27 y=%2746%27 font-family=%27serif%27 font-size=%2740%27 text-anchor=%27middle%27 fill=%27white%27%3E%E2%88%AB%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* VOICE: app de estudos amigável e direto, como um caderno de bolso
+   IDEA: caderno quadriculado de engenharia com abas coloridas virando app de celular
+   PICTURE: anel de progresso na tela inicial e trilha de nós do básico ao avançado
+   COLOUR and TYPE: papel branco, grafite; azul Mat, laranja Fís, violeta Quí; IBM Plex Sans + STIX nas fórmulas
+   LAYOUT: barra superior, tela única rolável, navegação inferior fixa; coluna central no computador */
+:root{color-scheme:light dark;
+--bg:light-dark(#eef0f3,#0e1013);--app:light-dark(#f8f8f5,#15171b);--card:light-dark(#ffffff,#1e2126);--ink:light-dark(#1d2127,#e8eaed);--soft:light-dark(#5d646e,#a2a9b3);
+--line:light-dark(#e2e5e9,#2d3139);--grid:light-dark(#eef0f3,#1b1e23);
+--mat:light-dark(#2557d6,#7ea2ff);--fis:light-dark(#b83a06,#ff9a63);--qui:light-dark(#6b3fe0,#b49bff);
+--edge:light-dark(#868d97,#666c76);--r1:8px;--r2:12px;
+--acc:var(--mat);--tint:light-dark(#eaf0ff,#1c2438);--on:light-dark(#fff,#0e1013)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif;overflow-x:clip}
+.d-fis{--acc:var(--fis);--tint:light-dark(#fff0e8,#2a1d17)}
+.d-qui{--acc:var(--qui);--tint:light-dark(#f2edff,#221c33)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.app{max-width:560px;margin:0 auto;min-height:100%;background:var(--app);display:flex;flex-direction:column;position:relative;border-inline:1px solid var(--line)}
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;background:color-mix(in srgb,var(--app) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);min-height:60px}
+.top h1{font-size:18px;margin:0;line-height:1.2;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-inline:6px}
+.top h1 small{display:block;font-size:13px;font-weight:400;color:var(--soft)}
+.ib{width:44px;height:44px;border-radius:50%;border:0;background:none;display:grid;place-items:center;flex:none}
+.ib:active{background:var(--grid)}
+.ib svg{width:24px;height:24px}
+.view{flex:1;padding:16px 16px calc(96px + env(safe-area-inset-bottom));animation:in .28s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+.nav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:500;color:var(--soft);padding:6px 0;min-height:52px;border-radius:12px}
+.nav svg{width:24px;height:24px}
+.nav button[aria-current=page]{color:var(--acc)}
+.nav button[aria-current=page] svg{background:var(--tint);border-radius:999px;padding:2px 14px;width:52px;box-sizing:content-box;margin-inline:-14px}
+/* home */
+.hero{display:flex;gap:18px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:18px}
+.ring{width:108px;height:108px;flex:none;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:24px;line-height:1}
+.ring b small{display:block;font-size:12px;font-weight:400;color:var(--soft);margin-top:2px;text-align:center}
+.hero h2{font-size:24px;line-height:1.1;margin:0 0 6px}
+.hero p{margin:0;color:var(--soft);font-size:14px}
+.sec{font-size:15px;font-weight:600;margin:24px 4px 10px;display:flex;justify-content:space-between;align-items:baseline}
+.sec a{font-size:14px;font-weight:500;color:var(--acc);text-decoration:none;cursor:pointer}
+.cont{display:flex;gap:14px;align-items:center;width:100%;text-align:start;border:0;border-radius:var(--r2);padding:16px 18px;background:var(--acc);color:var(--on)}
+.cont .tx{flex:1}.cont small{display:block;opacity:.85;font-size:13px}.cont b{display:block;font-size:17px;line-height:1.25;margin-top:2px}
+.cont .go{width:44px;height:44px;border-radius:50%;background:color-mix(in srgb,var(--on) 18%,transparent);display:grid;place-items:center;flex:none}
+.cont .go svg{width:22px;height:22px}
+.dcards{display:grid;gap:10px}
+.dc{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:14px;align-items:center;text-align:start;width:100%;background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:14px}
+.dc .ic{width:52px;text-align:center;color:var(--acc);font:600 28px/1 "STIX Two Text",serif}
+.dc b{display:block;font-size:17px}.dc small{color:var(--soft);font-size:13px}
+.dc .pc{font-weight:600;color:var(--acc);font-size:15px}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:var(--acc);border-radius:9px;transition:width .5s}
+.daily{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:16px}
+.daily small{color:var(--soft);font-size:13px}.daily p{margin:6px 0 0}
+/* trilha */
+.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--grid);border-radius:var(--r2);padding:4px;gap:4px;position:sticky;top:68px;z-index:5}
+.seg button{border:0;background:none;border-radius:var(--r1);min-height:44px;font-weight:600;font-size:15px;color:var(--soft)}
+.seg button[aria-pressed=true]{background:var(--card);color:var(--acc);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.sum{display:flex;justify-content:space-between;font-size:14px;color:var(--soft);margin:16px 4px 0}
+.lvl{display:flex;align-items:center;gap:10px;margin:22px 4px 8px;font-weight:600;font-size:15px}
+.lvl span{font-size:13px;font-weight:500;color:var(--soft)}
+.trail{position:relative;display:grid;gap:8px}
+.trail::before{content:"";position:absolute;left:31px;top:20px;bottom:20px;width:2px;background:var(--line)}
+.node{position:relative;display:flex;gap:14px;align-items:center;width:100%;text-align:start;background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:12px 14px;min-height:60px}
+.node:active{transform:scale(.98)}
+.dot{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;border:2px solid var(--line);background:var(--card);font-size:14px;font-weight:600;color:var(--soft);z-index:1}
+.dot.ok{background:var(--acc);border-color:var(--acc);color:var(--on)}
+.node.cur{border-color:var(--acc);box-shadow:0 0 0 3px var(--tint)}
+.node.cur .dot:not(.ok){border-color:var(--acc);color:var(--acc)}
+.node b{font-weight:500;font-size:15px;line-height:1.3;flex:1}
+.node .chev{color:var(--soft);width:20px;height:20px;flex:none}
+.node small{display:block;font-size:12px;color:var(--soft);font-weight:400}
+/* aula */
+.lhead{background:var(--tint);border-radius:var(--r2);padding:20px 18px;margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-size:13px}
+.chip{background:var(--card);color:var(--acc);font-weight:600;padding:3px 10px;border-radius:999px}
+.chip.p{background:none;color:var(--soft);font-weight:500;padding-inline:4px}
+.lhead h2{font-size:clamp(26px,7vw,34px);line-height:1.1;margin:10px 0 10px;text-wrap:balance}
+.lhead p{margin:0;font-size:15px}
+.steps{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:0 16px;position:sticky;top:68px;z-index:5}
+.steps::-webkit-scrollbar{display:none}
+.steps a{flex:none;font-size:14px;font-weight:500;padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--ink);text-decoration:none;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:18px;margin-bottom:12px;scroll-margin-top:124px}
+.card h3{font-size:17px;margin:0 0 10px;display:flex;align-items:center;gap:10px}
+.card h3{color:var(--acc)}
+.card p{margin:0 0 12px}.card p:last-child{margin-bottom:0}
+.m,.fx code{font-family:"STIX Two Text",Cambria,serif;font-size:1.08em}
+.fx{display:grid}
+.fx div{padding:10px 0;border-top:1px solid var(--line)}.fx div:first-child{border-top:0;padding-top:0}
+.fx span{display:block;font-size:13px;color:var(--soft)}
+.fx code{font-size:19px;overflow-wrap:anywhere;line-height:1.5}
+.fx .cp{float:inline-end;border:0;background:none;color:var(--acc);font-size:14px;font-weight:500;min-height:44px;min-width:64px;padding:0 4px;margin-top:-6px}
+.qbox{margin-bottom:14px}
+.rev{width:100%;border:0;background:var(--acc);color:var(--on);border-radius:var(--r1);min-height:48px;font-weight:600}
+.sol{margin-top:14px;padding-top:14px;border-top:2px solid var(--acc)}
+.card.tip{background:var(--tint);border-color:transparent}
+sub,sup{font-size:.72em;line-height:0}
+.abar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;z-index:10;display:grid;grid-template-columns:52px minmax(0,1fr) 52px;gap:8px;background:var(--card);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+.abar button{border:1px solid var(--line);background:var(--card);border-radius:var(--r1);min-height:52px;display:grid;place-items:center}
+.abar button:disabled{opacity:.35}
+.abar svg{width:22px;height:22px}
+.abar .mk{background:var(--acc);border-color:var(--acc);color:var(--on);font-weight:600;font-size:15px}
+.abar .mk.on{background:var(--tint);color:var(--acc);border-color:var(--tint)}
+/* busca e progresso */
+.sbox{position:sticky;top:68px;z-index:5;background:var(--app);padding-bottom:8px}
+.sbox input{width:100%;font-size:16px;padding:14px 16px;border:1px solid var(--edge);border-radius:var(--r1);background:var(--card);min-height:52px}
+.hint{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.hint button{border:1px solid var(--edge);background:var(--card);border-radius:999px;padding:8px 14px;min-height:40px;font-size:14px}
+.empty{color:var(--soft);text-align:center;padding:30px 10px}
+.stat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat div{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:14px;text-align:center}
+.stat b{display:block;font-size:26px;line-height:1.1}.stat small{font-size:13px;color:var(--soft)}
+.pl{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:16px;margin-bottom:10px}
+.pl header{display:flex;justify-content:space-between;font-weight:600}
+.pl .lv{display:grid;grid-template-columns:7.5em minmax(0,1fr) 3em;gap:10px;align-items:center;font-size:14px;color:var(--soft);margin-top:10px}
+.pl .lv .bar{margin:0}.pl .lv span:last-child{text-align:end}
+.danger{width:100%;border:1px solid var(--edge);background:var(--card);border-radius:var(--r1);min-height:48px;color:var(--soft);margin-top:14px}
+.sheet{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet>div{background:var(--card);width:100%;max-width:560px;border-radius:var(--r2) var(--r2) 0 0;padding:22px 20px calc(20px + env(safe-area-inset-bottom));animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(100%)}}
+.sheet h3{margin:0 0 6px}.sheet p{margin:0 0 18px;color:var(--soft)}
+.sheet .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sheet button{min-height:50px;border-radius:var(--r1);border:1px solid var(--line);background:var(--card);font-weight:600}
+.sheet .yes{background:#c62f2f;border-color:#c62f2f;color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--app);padding:10px 18px;border-radius:999px;font-size:14px;z-index:40;animation:in .2s}
+@media(min-width:600px){.app{margin-block:0}}
+
+/* GLASS: efeito vidro (inspirado no expo-glass-effect / Liquid Glass) só em barras e botões */
+:root{--g-bg:light-dark(rgba(255,255,255,.58),rgba(38,42,50,.55));--g-brd:light-dark(rgba(255,255,255,.85),rgba(255,255,255,.16));
+--g-hi:light-dark(rgba(255,255,255,.9),rgba(255,255,255,.18));--g-lo:light-dark(rgba(0,0,0,.06),rgba(0,0,0,.35));
+--g-sh:0 10px 30px -12px rgba(0,0,0,.35);--g-blur:blur(22px) saturate(180%)}
+.top,.nav,.abar,.seg,.ib,.rev,.cont,.hint button,.danger,.sheet button,.abar button,.nav button[aria-current=page] svg,.seg button[aria-pressed=true]{
+ -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur)}
+.top{background:var(--g-bg);border-bottom:1px solid var(--g-brd);box-shadow:inset 0 -1px 0 var(--g-lo)}
+.nav,.abar{bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100% - 24px);max-width:536px;background:var(--g-bg);border:1px solid var(--g-brd);
+ box-shadow:inset 0 1px 0 var(--g-hi),inset 0 -1px 0 var(--g-lo),var(--g-sh);padding:6px}
+.nav{border-radius:999px}
+.abar{border-radius:26px;padding:8px}
+.nav button{border-radius:999px;min-height:50px}
+.nav button[aria-current=page] svg{background:color-mix(in srgb,var(--acc) 16%,var(--g-bg));box-shadow:inset 0 1px 0 var(--g-hi)}
+.view{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+.toast{bottom:calc(100px + env(safe-area-inset-bottom))}
+.seg{background:var(--g-bg);border:1px solid var(--g-brd);box-shadow:inset 0 1px 0 var(--g-hi),var(--g-sh);border-radius:999px}
+.seg button{border-radius:999px}
+.seg button[aria-pressed=true]{background:color-mix(in srgb,var(--card) 70%,transparent);box-shadow:inset 0 1px 0 var(--g-hi),0 2px 8px -2px rgba(0,0,0,.2)}
+.ib{background:var(--g-bg);border:1px solid var(--g-brd);box-shadow:inset 0 1px 0 var(--g-hi),0 4px 12px -6px rgba(0,0,0,.3)}
+.abar button,.hint button,.danger,.sheet button{background:var(--g-bg);border:1px solid var(--g-brd);box-shadow:inset 0 1px 0 var(--g-hi),inset 0 -1px 0 var(--g-lo),0 4px 14px -8px rgba(0,0,0,.3)}
+.abar button{border-radius:999px}
+.hint button,.danger,.sheet button{border-radius:999px}
+.rev,.cont,.abar .mk,.sheet .yes{border:1px solid color-mix(in srgb,var(--on) 30%,transparent);
+ box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 45%,transparent),inset 0 -2px 6px color-mix(in srgb,#000 15%,transparent),0 10px 24px -12px var(--acc)}
+.rev,.cont,.abar .mk{background:linear-gradient(180deg,color-mix(in srgb,var(--acc) 90%,#fff),color-mix(in srgb,var(--acc) 94%,transparent))}
+.sheet .yes{background:color-mix(in srgb,#c62f2f 85%,transparent)}
+.rev,.abar .mk{border-radius:999px}
+.abar .mk.on{background:color-mix(in srgb,var(--acc) 18%,var(--g-bg));color:var(--acc);border-color:var(--g-brd)}
+.ib:active,.abar button:active,.rev:active,.cont:active,.hint button:active,.nav button:active{transform:scale(.96)}
+.ib,.abar button,.rev,.cont,.hint button,.nav button{transition:transform .12s ease-out}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+ :root{--g-bg:light-dark(rgba(255,255,255,.94),rgba(38,42,50,.95))}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="top"><button class="ib" id="back" aria-label="Voltar" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><h1 id="ttl">Exatas para Engenharia</h1></div>
+  <main class="view" id="view"></main>
+  <nav class="nav" id="nav"></nav>
+  <div class="abar" id="abar" hidden></div>
+</div>
+<script>window.PWA=true;if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
+<script>
+{
+const D={
+mat:{n:"Matemática",c:"--mat",t:[
+["alg",1,"Álgebra: potências, frações e equações","Toda conta de engenharia, de uma viga a um circuito, termina numa manipulação algébrica. Errar aqui derruba o resto.",
+`<p>Álgebra é a linguagem de manipular símbolos que representam números. As ferramentas essenciais são: <b>propriedades de potências</b> (multiplicar potências de mesma base soma expoentes; dividir subtrai), <b>frações</b> (só se soma com denominador comum), <b>produtos notáveis</b> e <b>fatoração</b>.</p><p>Resolver uma equação é isolar a incógnita fazendo a mesma operação dos dois lados. Na equação do 2º grau usamos a fórmula de Bhaskara; o discriminante Δ diz quantas raízes reais existem (Δ&gt;0 duas, Δ=0 uma, Δ&lt;0 nenhuma).</p><p>Logaritmo é a operação inversa da potência: log<sub>b</sub>a = x significa b<sup>x</sup> = a. Ele aparece em decibéis, pH, decaimento e escalas logarítmicas de gráficos.</p>`,
+[["Potências","a<sup>m</sup>·a<sup>n</sup> = a<sup>m+n</sup> ; (a<sup>m</sup>)<sup>n</sup> = a<sup>mn</sup>"],["Produtos notáveis","(a+b)² = a² + 2ab + b² ; a² − b² = (a+b)(a−b)"],["Bhaskara","x = (−b ± √Δ) / 2a , Δ = b² − 4ac"],["Logaritmos","log(ab) = log a + log b ; log a<sup>n</sup> = n·log a"]],
+"Simplifique <span class=m>(2x³)² / (4x²)</span> e resolva <span class=m>x² − 5x + 6 = 0</span>.",
+"<span class=m>(2x³)² = 4x⁶</span>, logo <span class=m>4x⁶/4x² = x⁴</span>. Na equação: Δ = 25 − 24 = 1, x = (5 ± 1)/2 → <b>x = 3 ou x = 2</b>. Confira: 3² − 15 + 6 = 0 ✓.",
+"Erro clássico: (a+b)² ≠ a² + b². Sempre que tiver dúvida, teste com números (a=1, b=2)."],
+["fun",1,"Funções e gráficos","Funções descrevem como uma grandeza depende de outra: posição × tempo, tensão × deformação, custo × produção.",
+`<p>Uma <b>função</b> associa cada valor de entrada x (domínio) a exatamente um valor de saída y = f(x) (imagem). Ler o gráfico é tão importante quanto a fórmula.</p><p>Famílias principais: <b>afim</b> (reta, f(x) = ax + b, a é a inclinação), <b>quadrática</b> (parábola, vértice em x = −b/2a), <b>exponencial</b> (crescimento/decaimento, f(x) = a·e<sup>kx</sup>), <b>logarítmica</b> (inversa da exponencial) e <b>trigonométricas</b> (periódicas).</p><p><b>Composição</b> f(g(x)) é aplicar uma função depois da outra. A <b>inversa</b> f⁻¹ desfaz f; para achá-la, troque x por y e isole y. Transformações: f(x)+k sobe o gráfico, f(x−h) desloca para a direita, −f(x) espelha no eixo x.</p>`,
+[["Função afim","f(x) = ax + b , a = Δy/Δx"],["Vértice da parábola","x<sub>v</sub> = −b/2a , y<sub>v</sub> = −Δ/4a"],["Exponencial","f(x) = A·e<sup>kx</sup> (k&gt;0 cresce, k&lt;0 decai)"],["Composição","(f∘g)(x) = f(g(x))"]],
+"Sendo <span class=m>f(x) = 2x + 3</span> e <span class=m>g(x) = x²</span>, calcule f(g(2)) e a inversa de f.",
+"g(2) = 4, então f(4) = 2·4 + 3 = <b>11</b>. Inversa: y = 2x + 3 → x = (y − 3)/2, logo <b>f⁻¹(x) = (x − 3)/2</b>.",
+"f(g(x)) quase nunca é igual a g(f(x)). A ordem importa: de dentro para fora."],
+["tri",1,"Trigonometria","Decompor forças, analisar ondas e correntes alternadas: tudo usa seno e cosseno.",
+`<p>No triângulo retângulo: <b>seno</b> = cateto oposto/hipotenusa, <b>cosseno</b> = adjacente/hipotenusa, <b>tangente</b> = oposto/adjacente. Ângulos notáveis: 30°, 45°, 60° (vale decorar).</p><p>No <b>círculo trigonométrico</b> (raio 1), o ponto de ângulo θ tem coordenadas (cos θ, sen θ). Isso estende seno e cosseno para qualquer ângulo e explica por que são periódicas (período 2π).</p><p>Em cálculo usa-se <b>radianos</b>: 180° = π rad. Para triângulos quaisquer, use a <b>lei dos senos</b> e a <b>lei dos cossenos</b>.</p>`,
+[["Relação fundamental","sen²θ + cos²θ = 1"],["Conversão","θ(rad) = θ(graus) · π/180"],["Lei dos cossenos","a² = b² + c² − 2bc·cos A"],["Arco duplo","sen 2θ = 2 sen θ cos θ"]],
+"Uma escada de 5 m está apoiada numa parede formando 60° com o chão. A que altura ela toca a parede?",
+"Altura = hipotenusa × sen 60° = 5 × 0,866 ≈ <b>4,33 m</b>. A distância do pé da escada à parede é 5 × cos 60° = 2,5 m.",
+"Antes de usar a calculadora, verifique se ela está em DEG ou RAD. É o erro nº 1 em prova."],
+["vet",1,"Vetores e geometria analítica","Força, velocidade e campo elétrico são vetores. Sem eles não existe estática nem dinâmica.",
+`<p>Um <b>vetor</b> tem módulo, direção e sentido. No plano, escrevemos v = (v<sub>x</sub>, v<sub>y</sub>) ou v = v<sub>x</sub><b>i</b> + v<sub>y</sub><b>j</b>. Somamos componente a componente.</p><p>O <b>produto escalar</b> a·b resulta num número e mede o quanto os vetores apontam na mesma direção (zero se perpendiculares). É usado em trabalho (W = F·d). O <b>produto vetorial</b> a×b resulta num vetor perpendicular aos dois, usado em torque e força magnética.</p><p>Na geometria analítica, a reta é y = mx + b e a distância entre pontos vem de Pitágoras.</p>`,
+[["Módulo","|v| = √(v<sub>x</sub>² + v<sub>y</sub>² + v<sub>z</sub>²)"],["Produto escalar","a·b = a<sub>x</sub>b<sub>x</sub> + a<sub>y</sub>b<sub>y</sub> = |a||b|cos θ"],["Produto vetorial","|a×b| = |a||b| sen θ"],["Distância","d = √((x₂−x₁)² + (y₂−y₁)²)"]],
+"Dados <span class=m>a = (3, 4)</span> e <span class=m>b = (1, 0)</span>, calcule |a|, a·b e o ângulo entre eles.",
+"|a| = √(9+16) = <b>5</b>. a·b = 3·1 + 4·0 = <b>3</b>. cos θ = 3/(5·1) = 0,6 → <b>θ ≈ 53,1°</b>.",
+"Componentes de uma força F inclinada θ do eixo x: F<sub>x</sub> = F cos θ, F<sub>y</sub> = F sen θ."],
+["lin",2,"Álgebra linear: matrizes e sistemas","Estruturas treliçadas, circuitos com várias malhas e simulações numéricas viram sistemas lineares.",
+`<p>Uma <b>matriz</b> é uma tabela de números. Um sistema linear pode ser escrito como <span class=m>A·x = b</span>. O produto de matrizes é linha × coluna e <b>não é comutativo</b>.</p><p>O <b>determinante</b> diz se o sistema tem solução única: det(A) ≠ 0 → solução única; det(A) = 0 → nenhuma ou infinitas. Para resolver: escalonamento (eliminação de Gauss), regra de Cramer ou matriz inversa.</p><p>No nível avançado aparecem <b>autovalores e autovetores</b> (A·v = λv), essenciais em vibrações, estabilidade e tensões principais.</p>`,
+[["Determinante 2×2","det [[a, b],[c, d]] = ad − bc"],["Cramer","x<sub>i</sub> = det(A<sub>i</sub>) / det(A)"],["Inversa 2×2","A⁻¹ = (1/det A)·[[d, −b],[−c, a]]"],["Autovalores","det(A − λI) = 0"]],
+"Resolva <span class=m>2x + y = 5</span> e <span class=m>x − y = 1</span>.",
+"det A = 2·(−1) − 1·1 = −3 ≠ 0 (solução única). Somando as equações: 3x = 6 → <b>x = 2</b>; então <b>y = 1</b>. Por Cramer: x = (5·(−1) − 1·1)/(−3) = 2 ✓.",
+"Sempre substitua a solução nas equações originais. Leva 10 segundos e evita perder a questão."],
+["lim",2,"Limites e continuidade","O limite é a base de derivada e integral: é o que permite falar de ‘taxa instantânea’.",
+`<p>O limite <span class=m>lim<sub>x→a</sub> f(x) = L</span> diz que f(x) fica tão perto de L quanto quisermos quando x se aproxima de a — sem precisar valer em a.</p><p>Quando a substituição direta dá <b>0/0</b> (indeterminação), fatoramos, racionalizamos ou usamos L'Hôpital. Limites no infinito revelam assíntotas horizontais: em razões de polinômios, compare os maiores graus.</p><p>f é <b>contínua</b> em a se f(a) existe, o limite existe e os dois são iguais. Intuitivamente: dá para desenhar sem tirar o lápis.</p>`,
+[["Limite fundamental","lim<sub>x→0</sub> sen x / x = 1"],["Número de Euler","lim<sub>n→∞</sub> (1 + 1/n)<sup>n</sup> = e ≈ 2,718"],["L'Hôpital (0/0 ou ∞/∞)","lim f/g = lim f′/g′"]],
+"Calcule <span class=m>lim<sub>x→2</sub> (x² − 4)/(x − 2)</span>.",
+"Substituir dá 0/0. Fatorando: (x−2)(x+2)/(x−2) = x + 2. Logo o limite é 2 + 2 = <b>4</b>.",
+"0/0 não significa ‘não existe’: significa ‘ainda precisa trabalhar a expressão’."],
+["der",2,"Derivadas","A derivada é a taxa de variação: velocidade, aceleração, corrente (dq/dt), inclinação de curvas.",
+`<p>A derivada f′(x) é o limite da inclinação da reta secante quando os pontos se aproximam: a inclinação da reta tangente. Fisicamente, é ‘quanto y muda por unidade de x’ naquele instante.</p><p>Na prática derivamos com regras: <b>potência</b>, <b>produto</b>, <b>quociente</b> e <b>cadeia</b> (para funções compostas — a mais usada e a mais esquecida).</p><p>Derivadas a decorar: (sen x)′ = cos x, (cos x)′ = −sen x, (e<sup>x</sup>)′ = e<sup>x</sup>, (ln x)′ = 1/x.</p>`,
+[["Definição","f′(x) = lim<sub>h→0</sub> [f(x+h) − f(x)] / h"],["Potência","(x<sup>n</sup>)′ = n·x<sup>n−1</sup>"],["Produto","(uv)′ = u′v + uv′"],["Quociente","(u/v)′ = (u′v − uv′)/v²"],["Cadeia","[f(g(x))]′ = f′(g(x))·g′(x)"]],
+"Derive <span class=m>f(x) = x³·sen x</span> e <span class=m>g(x) = e<sup>2x²</sup></span>.",
+"Produto: f′(x) = <b>3x² sen x + x³ cos x</b>. Cadeia: a de fora é e<sup>u</sup>, a de dentro u = 2x², u′ = 4x. Logo <b>g′(x) = 4x·e<sup>2x²</sup></b>.",
+"Na regra da cadeia, derive ‘de fora para dentro’ e multiplique pela derivada do que está dentro."],
+["apd",2,"Aplicações de derivadas","Otimizar: menor material, maior resistência, menor custo. É o uso mais direto do cálculo no projeto.",
+`<p><b>Máximos e mínimos</b>: ocorrem onde f′(x) = 0 (pontos críticos) ou nas extremidades do intervalo. A segunda derivada classifica: f″ &gt; 0 é mínimo (concavidade para cima), f″ &lt; 0 é máximo.</p><p>Roteiro de otimização: (1) desenhe e nomeie variáveis; (2) escreva a função a otimizar; (3) use a restrição para deixá-la com uma variável; (4) derive e iguale a zero; (5) verifique.</p><p>Outras aplicações: <b>taxas relacionadas</b> (como o nível de um tanque sobe), aproximação linear f(x) ≈ f(a) + f′(a)(x−a) e o método de Newton para raízes.</p>`,
+[["Ponto crítico","f′(x) = 0"],["Teste da 2ª derivada","f″ &gt; 0 → mínimo ; f″ &lt; 0 → máximo"],["Aproximação linear","f(x) ≈ f(a) + f′(a)(x − a)"],["Método de Newton","x<sub>n+1</sub> = x<sub>n</sub> − f(x<sub>n</sub>)/f′(x<sub>n</sub>)"]],
+"Com 40 m de cerca, qual retângulo tem a maior área?",
+"Perímetro: 2x + 2y = 40 → y = 20 − x. Área A(x) = x(20 − x) = 20x − x². A′(x) = 20 − 2x = 0 → x = 10, y = 10. A″ = −2 &lt; 0 (máximo). <b>Quadrado de 10 m, área 100 m²</b>.",
+"Sempre escreva a restrição antes de derivar: função com duas variáveis não se otimiza assim."],
+["int",2,"Integrais","Área, volume, trabalho de força variável, centro de massa, carga acumulada: tudo é integral.",
+`<p>A integral é a operação inversa da derivada (<b>antiderivada</b>) e também a soma de infinitos pedacinhos (<b>soma de Riemann</b>). O Teorema Fundamental do Cálculo liga as duas ideias.</p><p>A <b>integral indefinida</b> ∫f(x)dx = F(x) + C dá uma família de funções. A <b>definida</b> ∫<sub>a</sub><sup>b</sup>f(x)dx dá um número: a área com sinal sob a curva.</p><p>Exemplos em engenharia: deslocamento = ∫v dt; trabalho = ∫F dx; volume de sólido de revolução = ∫πr² dx.</p>`,
+[["Potência","∫x<sup>n</sup>dx = x<sup>n+1</sup>/(n+1) + C , n ≠ −1"],["Logaritmo","∫(1/x)dx = ln|x| + C"],["TFC","∫<sub>a</sub><sup>b</sup>f(x)dx = F(b) − F(a)"],["Trigonométricas","∫cos x dx = sen x + C ; ∫sen x dx = −cos x + C"]],
+"Calcule <span class=m>∫<sub>0</sub><sup>2</sup> (3x² + 1) dx</span>.",
+"Antiderivada: F(x) = x³ + x. F(2) − F(0) = (8 + 2) − 0 = <b>10</b>.",
+"Não esqueça o +C na integral indefinida. E derive o resultado para conferir."],
+["tin",3,"Técnicas de integração","Muitas integrais reais não saem direto: é preciso saber escolher a técnica.",
+`<p><b>Substituição</b> (u = g(x)): use quando aparece uma função e sua derivada multiplicando. É a regra da cadeia ao contrário.</p><p><b>Por partes</b>: para produtos como x·e<sup>x</sup>, x·sen x, ln x. Regra prática LIATE para escolher u: Logarítmica, Inversa trigonométrica, Algébrica, Trigonométrica, Exponencial.</p><p><b>Frações parciais</b> quebram razões de polinômios em frações simples. <b>Substituição trigonométrica</b> resolve raízes como √(a² − x²). Integrais impróprias têm limite infinito e se resolvem com limites.</p>`,
+[["Substituição","∫f(g(x))g′(x)dx = ∫f(u)du"],["Por partes","∫u dv = uv − ∫v du"],["Frações parciais","1/[(x−a)(x−b)] = A/(x−a) + B/(x−b)"]],
+"Calcule <span class=m>∫x·e<sup>x</sup> dx</span>.",
+"Por partes com u = x (du = dx) e dv = e<sup>x</sup>dx (v = e<sup>x</sup>): ∫x e<sup>x</sup>dx = x e<sup>x</sup> − ∫e<sup>x</sup>dx = <b>e<sup>x</sup>(x − 1) + C</b>. Derivando: e<sup>x</sup>(x−1) + e<sup>x</sup> = x e<sup>x</sup> ✓.",
+"Se a integral ‘piorou’ depois de partes, troque a escolha de u e dv."],
+["ser",3,"Sequências e séries","Séries de Taylor são como calculadoras e simulações computam sen, e<sup>x</sup> e resolvem problemas complexos.",
+`<p>Uma <b>série</b> é uma soma infinita. Ela <b>converge</b> se as somas parciais tendem a um número. A série geométrica converge quando |r| &lt; 1.</p><p>Testes de convergência: termo geral (se a<sub>n</sub> não vai a zero, diverge), razão, comparação, integral. A série harmônica Σ1/n diverge, mesmo com termos indo a zero.</p><p>A <b>série de Taylor</b> aproxima uma função por um polinômio em torno de um ponto. Em engenharia, usar só os primeiros termos (linearização) simplifica modelos: por exemplo, sen θ ≈ θ para ângulos pequenos no pêndulo. Séries de Fourier decompõem sinais periódicos em senos e cossenos.</p>`,
+[["Geométrica","Σ ar<sup>n</sup> = a/(1 − r) , |r| &lt; 1"],["Taylor","f(x) = Σ f<sup>(n)</sup>(a)(x−a)<sup>n</sup>/n!"],["Exponencial","e<sup>x</sup> = 1 + x + x²/2! + x³/3! + …"],["Seno","sen x = x − x³/3! + x⁵/5! − …"]],
+"Some 1 + 1/2 + 1/4 + 1/8 + … e estime e<sup>0,1</sup> com três termos de Taylor.",
+"Geométrica com a = 1 e r = 1/2: soma = 1/(1 − 1/2) = <b>2</b>. e<sup>0,1</sup> ≈ 1 + 0,1 + 0,005 = <b>1,105</b> (valor real 1,10517).",
+"Quanto mais perto de a está o x, menos termos de Taylor você precisa."],
+["mul",3,"Cálculo de várias variáveis","Temperatura numa placa, tensão num sólido, escoamento: grandezas que dependem de x, y, z e t.",
+`<p><b>Derivada parcial</b> ∂f/∂x: derive em x tratando as outras variáveis como constantes. O <b>gradiente</b> ∇f reúne as parciais e aponta a direção de maior crescimento.</p><p><b>Integrais duplas e triplas</b> calculam área, volume, massa e momentos de inércia em regiões 2D e 3D. Coordenadas polares, cilíndricas e esféricas simplificam regiões circulares (lembre do jacobiano r ou r² sen φ).</p><p>No cálculo vetorial aparecem divergente, rotacional e os teoremas de Green, Gauss e Stokes, base do eletromagnetismo e da mecânica dos fluidos.</p>`,
+[["Gradiente","∇f = (∂f/∂x, ∂f/∂y, ∂f/∂z)"],["Diferencial total","df = (∂f/∂x)dx + (∂f/∂y)dy"],["Polares","dA = r dr dθ"],["Divergência (Gauss)","∯F·dS = ∭(∇·F)dV"]],
+"Para <span class=m>f(x, y) = x²y + 3y</span>, calcule as parciais no ponto (1, 2).",
+"∂f/∂x = 2xy → 2·1·2 = <b>4</b>. ∂f/∂y = x² + 3 → 1 + 3 = <b>4</b>. Gradiente em (1,2): ∇f = (4, 4).",
+"Na integral dupla, a ordem dx dy ou dy dx muda os limites — desenhe a região primeiro."],
+["edo",3,"Equações diferenciais (EDOs)","Modelam tudo que muda no tempo: resfriamento, circuitos RC/RLC, vibrações, crescimento populacional.",
+`<p>Uma EDO relaciona uma função com suas derivadas. A <b>ordem</b> é a maior derivada que aparece. Resolver é achar a função; a condição inicial fixa a constante.</p><p><b>1ª ordem separável</b>: separe y de um lado e x do outro e integre. <b>Linear de 1ª ordem</b>: use fator integrante. O caso mais comum é dy/dt = ky (crescimento ou decaimento exponencial).</p><p><b>2ª ordem linear com coeficientes constantes</b> (ay″ + by′ + cy = 0): resolva a equação característica ar² + br + c = 0. Raízes reais distintas, repetidas ou complexas dão respostas exponenciais ou oscilatórias — é o modelo massa-mola-amortecedor e do circuito RLC. A transformada de Laplace resolve esses problemas de forma algébrica.</p>`,
+[["Exponencial","dy/dt = ky → y = y₀e<sup>kt</sup>"],["Fator integrante","y′ + p(x)y = q(x) , μ = e<sup>∫p dx</sup>"],["Característica","ay″ + by′ + cy = 0 → ar² + br + c = 0"],["Raízes complexas α ± βi","y = e<sup>αx</sup>(C₁cos βx + C₂sen βx)"]],
+"Uma substância decai segundo <span class=m>dy/dt = −0,1y</span>, com y(0) = 100 g. Quanto resta em t = 10?",
+"Solução: y(t) = 100e<sup>−0,1t</sup>. Em t = 10: y = 100e<sup>−1</sup> ≈ <b>36,8 g</b>.",
+"Sempre confira derivando a resposta e substituindo na EDO."],
+["est",2,"Probabilidade e estatística","Controle de qualidade, ensaios de laboratório e incerteza de medidas exigem estatística.",
+`<p><b>Média</b> resume o centro dos dados; <b>mediana</b> é o valor do meio (resiste a valores extremos); <b>desvio padrão</b> mede a dispersão.</p><p>Probabilidade de um evento: casos favoráveis/casos possíveis (se equiprováveis). Eventos independentes: P(A e B) = P(A)·P(B).</p><p>A <b>distribuição normal</b> (curva de sino) descreve muitas medidas: cerca de 68% dos dados ficam a 1 desvio da média, 95% a 2 e 99,7% a 3. Em laboratório, use isso para relatar resultados como média ± incerteza. Regressão linear ajusta uma reta aos pontos experimentais.</p>`,
+[["Média","x̄ = Σx<sub>i</sub> / n"],["Desvio padrão (amostral)","s = √[Σ(x<sub>i</sub> − x̄)² / (n − 1)]"],["Independentes","P(A∩B) = P(A)·P(B)"],["Padronização","z = (x − μ)/σ"]],
+"Dados: 2, 4, 4, 4, 5, 5, 7, 9. Calcule a média e o desvio padrão populacional.",
+"Média = 40/8 = <b>5</b>. Desvios ao quadrado: 9, 1, 1, 1, 0, 0, 4, 16 → soma 32. Variância populacional = 32/8 = 4 → <b>σ = 2</b>. (O amostral seria √(32/7) ≈ 2,14.)",
+"Use n − 1 quando os dados são uma amostra e você quer estimar a população."]
+]},
+fis:{n:"Física",c:"--fis",t:[
+["uni",1,"Grandezas, unidades e análise dimensional","Um erro de unidade já derrubou uma sonda da NASA. Engenheiro confere unidade em toda conta.",
+`<p>O <b>Sistema Internacional (SI)</b> tem 7 unidades de base: metro (m), quilograma (kg), segundo (s), ampère (A), kelvin (K), mol e candela. As demais são derivadas: newton N = kg·m/s², joule J = N·m, watt W = J/s, pascal Pa = N/m².</p><p>Prefixos: k = 10³, M = 10⁶, G = 10⁹, m = 10⁻³, μ = 10⁻⁶, n = 10⁻⁹.</p><p><b>Análise dimensional</b>: os dois lados de uma equação precisam ter as mesmas dimensões. Isso detecta erros e até sugere fórmulas. Grandezas podem ser <b>escalares</b> (massa, energia) ou <b>vetoriais</b> (força, velocidade).</p>`,
+[["Velocidade","1 m/s = 3,6 km/h"],["Força","1 N = 1 kg·m/s²"],["Energia e potência","1 J = 1 N·m ; 1 W = 1 J/s"],["Pressão","1 atm ≈ 101 325 Pa ≈ 1,013 bar"]],
+"Converta 72 km/h para m/s e verifique a dimensão de <span class=m>½mv²</span>.",
+"72 / 3,6 = <b>20 m/s</b>. ½mv² tem dimensão kg·(m/s)² = kg·m²/s² = N·m = <b>J</b>, ou seja, energia ✓.",
+"Carregue as unidades em toda a conta, não só no final: elas acusam o erro sozinhas."],
+["cin",1,"Cinemática em uma dimensão","Descrever o movimento é o primeiro passo para projetar veículos, elevadores e máquinas.",
+`<p><b>Posição</b> x(t), <b>velocidade</b> v = dx/dt e <b>aceleração</b> a = dv/dt. A área sob o gráfico v × t é o deslocamento.</p><p>No <b>MRU</b> a velocidade é constante: x = x₀ + vt. No <b>MRUV</b> a aceleração é constante e valem as equações abaixo. A de Torricelli é útil quando o tempo não é dado.</p><p>Queda livre é MRUV com a = g ≈ 9,8 m/s² (muitas provas usam 10 m/s²). Defina sempre o sentido positivo antes de começar.</p>`,
+[["Velocidade (MRUV)","v = v₀ + at"],["Posição (MRUV)","x = x₀ + v₀t + ½at²"],["Torricelli","v² = v₀² + 2aΔx"],["Velocidade média","v<sub>m</sub> = Δx/Δt"]],
+"Um carro parte do repouso com a = 2 m/s². Qual a velocidade e a distância após 5 s?",
+"v = 0 + 2·5 = <b>10 m/s</b>. x = 0 + 0 + ½·2·25 = <b>25 m</b>. Conferindo por Torricelli: 10² = 0 + 2·2·25 = 100 ✓.",
+"Velocidade média só é (v₀+v)/2 quando a aceleração é constante."],
+["pro",1,"Movimento em duas dimensões e projéteis","Trajetória de jatos d'água, lançamentos e qualquer movimento que combina direções.",
+`<p>A ideia central: <b>os eixos são independentes</b>. No lançamento oblíquo, o eixo x é MRU (sem aceleração horizontal, desprezando o ar) e o eixo y é MRUV com a = −g.</p><p>Decomponha a velocidade inicial: v₀ₓ = v₀cos θ e v₀ᵧ = v₀sen θ. O tempo é o mesmo nos dois eixos e é o elo entre eles.</p><p>O alcance máximo (mesmo nível de lançamento) ocorre com θ = 45°. Movimento circular uniforme também é 2D: a velocidade muda de direção, gerando aceleração centrípeta.</p>`,
+[["Alcance","R = v₀² sen 2θ / g"],["Altura máxima","H = v₀² sen²θ / 2g"],["Tempo de voo","t = 2v₀ sen θ / g"],["Centrípeta","a<sub>c</sub> = v²/r = ω²r"]],
+"Um objeto é lançado a 20 m/s com 45° (g = 10 m/s²). Calcule alcance e altura máxima.",
+"R = 400·sen 90°/10 = <b>40 m</b>. H = 400·(0,707)²/20 = 400·0,5/20 = <b>10 m</b>.",
+"No ponto mais alto, v<sub>y</sub> = 0 mas v<sub>x</sub> continua igual: a velocidade não é zero."],
+["new",1,"Leis de Newton e atrito","A base de toda a mecânica: estruturas, máquinas, veículos.",
+`<p><b>1ª lei (inércia)</b>: sem força resultante, o corpo mantém velocidade constante. <b>2ª lei</b>: F<sub>res</sub> = m·a. <b>3ª lei</b>: ação e reação têm mesmo módulo, sentidos opostos e atuam em corpos diferentes.</p><p>O método de ouro é o <b>diagrama de corpo livre</b>: isole o corpo, desenhe todas as forças (peso, normal, atrito, tração, aplicadas), escolha eixos e aplique ΣF = ma em cada eixo.</p><p><b>Atrito</b>: o estático impede o início do movimento (até μₑN); o cinético age durante o deslizamento (μ<sub>c</sub>N). No plano inclinado, decomponha o peso: mg sen θ ao longo do plano e mg cos θ perpendicular.</p>`,
+[["2ª lei","ΣF = m·a"],["Peso","P = m·g"],["Atrito cinético","f<sub>c</sub> = μ<sub>c</sub>·N"],["Plano inclinado","P<sub>∥</sub> = mg sen θ ; N = mg cos θ"]],
+"Um bloco de 10 kg é puxado por 50 N num piso com μ<sub>c</sub> = 0,2 (g = 10 m/s²). Qual a aceleração?",
+"N = mg = 100 N. Atrito = 0,2·100 = 20 N. Resultante = 50 − 20 = 30 N. a = 30/10 = <b>3 m/s²</b>.",
+"Normal nem sempre é igual ao peso: muda em planos inclinados ou com forças inclinadas."],
+["ene",2,"Trabalho, energia e potência","Escolher motores, calcular consumo e rendimento: tudo passa por energia.",
+`<p><b>Trabalho</b> é a energia transferida por uma força ao longo de um deslocamento: W = F·d·cos θ. O <b>teorema trabalho-energia</b>: o trabalho total é a variação da energia cinética.</p><p><b>Energia potencial</b> gravitacional (mgh) e elástica (½kx²) são armazenadas. Sem atrito, a <b>energia mecânica se conserva</b>: E<sub>c</sub> + E<sub>p</sub> = constante. Com atrito, parte vira calor.</p><p><b>Potência</b> é a taxa de energia: P = W/t = F·v. <b>Rendimento</b> η = potência útil / potência total — sempre menor que 1.</p>`,
+[["Trabalho","W = F·d·cos θ"],["Energia cinética","E<sub>c</sub> = ½mv²"],["Potencial","E<sub>p</sub> = mgh ; E<sub>el</sub> = ½kx²"],["Potência","P = W/Δt = F·v"]],
+"Um objeto cai do repouso de 5 m de altura (g = 10 m/s², sem ar). Com que velocidade chega ao chão?",
+"Conservação: mgh = ½mv² → v = √(2gh) = √(2·10·5) = √100 = <b>10 m/s</b>. A massa não importa.",
+"Energia é escalar: problemas com curvas e rampas costumam ser mais fáceis por energia do que por forças."],
+["mom",2,"Momento linear e colisões","Segurança veicular, impacto, propulsão de foguetes e jatos.",
+`<p>O <b>momento linear</b> é p = m·v (vetor). O <b>impulso</b> J = F·Δt é a variação do momento. Aumentar o tempo de impacto reduz a força: é o princípio do airbag.</p><p>Em sistemas isolados, o <b>momento total se conserva</b> em qualquer colisão. A energia cinética só se conserva em colisões <b>elásticas</b>. Nas <b>inelásticas</b>, parte vira calor e deformação; nas <b>perfeitamente inelásticas</b>, os corpos saem juntos.</p><p>O centro de massa de um sistema isolado se move com velocidade constante.</p>`,
+[["Momento","p = m·v"],["Impulso","J = F·Δt = Δp"],["Conservação","m₁v₁ + m₂v₂ = m₁v₁′ + m₂v₂′"],["Coef. de restituição","e = v<sub>afast</sub>/v<sub>aprox</sub> (1 elástica, 0 grudam)"]],
+"Um carrinho de 2 kg a 3 m/s colide e gruda em outro de 1 kg parado. Velocidade final e energia perdida?",
+"Momento: 2·3 = (2+1)v → <b>v = 2 m/s</b>. E<sub>c</sub> antes = ½·2·9 = 9 J; depois = ½·3·4 = 6 J. Perdidos <b>3 J</b> (viraram calor e deformação).",
+"Momento se conserva sempre no choque; energia cinética quase nunca. Não troque os dois."],
+["rot",2,"Rotação, torque e momento de inércia","Eixos, engrenagens, turbinas, alavancas e chaves de roda.",
+`<p>Cada grandeza linear tem uma rotacional: posição → ângulo θ, velocidade → ω, aceleração → α, massa → <b>momento de inércia I</b>, força → <b>torque τ</b>.</p><p>Torque é a ‘força de girar’: τ = r·F·sen θ. Braço maior, torque maior. A 2ª lei para rotação: Στ = I·α.</p><p>O momento de inércia depende de como a massa está distribuída em relação ao eixo (massa longe do eixo = mais difícil de girar). Teorema dos eixos paralelos: I = I<sub>cm</sub> + Md². Em <b>equilíbrio estático</b>: ΣF = 0 e Στ = 0 — base do cálculo de reações em vigas.</p>`,
+[["Torque","τ = r·F·sen θ"],["2ª lei rotacional","Στ = I·α"],["Relações","v = ωr ; a<sub>t</sub> = αr"],["Disco / anel","I<sub>disco</sub> = ½MR² ; I<sub>anel</sub> = MR²"],["Energia de rotação","E = ½Iω²"]],
+"Uma força de 20 N age perpendicularmente a 0,3 m do eixo de um disco de 2 kg e raio 0,5 m. Calcule τ e α.",
+"τ = 0,3·20 = <b>6 N·m</b>. I = ½·2·0,5² = 0,25 kg·m². α = τ/I = 6/0,25 = <b>24 rad/s²</b>.",
+"Em estática, escolha o ponto de cálculo dos torques onde há forças desconhecidas: elas somem da equação."],
+["flu",2,"Mecânica dos fluidos","Barragens, tubulações, bombas, sistemas hidráulicos e aerodinâmica.",
+`<p><b>Hidrostática</b>: a pressão aumenta com a profundidade (p = p₀ + ρgh). O <b>princípio de Pascal</b> explica a prensa hidráulica: a pressão aplicada se transmite igualmente. O <b>empuxo</b> (Arquimedes) é igual ao peso do fluido deslocado.</p><p><b>Hidrodinâmica</b>: a <b>equação da continuidade</b> diz que a vazão se mantém — se o tubo estreita, o fluido acelera. A <b>equação de Bernoulli</b> é a conservação de energia por volume para escoamento ideal.</p><p>Em escoamentos reais, o <b>número de Reynolds</b> indica regime laminar (baixo) ou turbulento (alto), e há perda de carga por atrito nas tubulações.</p>`,
+[["Pressão hidrostática","p = p₀ + ρgh"],["Empuxo","E = ρ<sub>fluido</sub>·g·V<sub>sub</sub>"],["Continuidade","A₁v₁ = A₂v₂ (Q = Av)"],["Bernoulli","p + ½ρv² + ρgh = constante"],["Reynolds","Re = ρvD/μ"]],
+"Qual a pressão absoluta a 10 m de profundidade em água (ρ = 1000 kg/m³, g = 10 m/s², p₀ = 101 kPa)?",
+"ρgh = 1000·10·10 = 100 000 Pa = 100 kPa. p = 101 + 100 = <b>201 kPa</b> — cerca de 2 atm. A cada 10 m de água, soma-se ~1 atm.",
+"Diferencie pressão absoluta (inclui a atmosfera) de manométrica (só o excesso)."],
+["osc",2,"Oscilações e ondas","Vibração de máquinas e estruturas, acústica, sinais e telecomunicações.",
+`<p>O <b>movimento harmônico simples (MHS)</b> ocorre quando a força restauradora é proporcional ao deslocamento (F = −kx). A posição é senoidal: x(t) = A cos(ωt + φ).</p><p>Sistema massa-mola: ω = √(k/m). Pêndulo simples (ângulos pequenos): ω = √(g/L). Com amortecimento, a amplitude decai; com força externa na frequência natural ocorre <b>ressonância</b> — o que se quer evitar em pontes e motores.</p><p><b>Ondas</b> transportam energia sem transportar matéria. Relação básica: v = λf. Fenômenos: reflexão, refração, interferência, difração e efeito Doppler.</p>`,
+[["MHS","x(t) = A cos(ωt + φ)"],["Massa-mola","ω = √(k/m) ; T = 2π√(m/k)"],["Pêndulo","T = 2π√(L/g)"],["Ondas","v = λ·f ; f = 1/T"]],
+"Uma massa de 0,5 kg presa a uma mola de k = 200 N/m oscila. Calcule ω, T e f.",
+"ω = √(200/0,5) = √400 = <b>20 rad/s</b>. T = 2π/20 ≈ <b>0,314 s</b>. f = 1/T ≈ <b>3,18 Hz</b>.",
+"ω (rad/s) e f (Hz) não são a mesma coisa: ω = 2πf."],
+["ter",3,"Termodinâmica","Motores, refrigeração, usinas e eficiência energética.",
+`<p><b>Lei zero</b>: corpos em contato atingem a mesma temperatura (define o termômetro). Use sempre <b>kelvin</b> em fórmulas: T(K) = T(°C) + 273,15.</p><p><b>1ª lei</b>: conservação de energia — ΔU = Q − W (Q recebido pelo sistema, W realizado pelo sistema). Processos especiais: isotérmico (ΔU = 0 no gás ideal), isobárico, isocórico (W = 0), adiabático (Q = 0).</p><p><b>2ª lei</b>: o calor não passa espontaneamente do frio para o quente, e nenhuma máquina converte todo calor em trabalho. A <b>entropia</b> do universo nunca diminui. O ciclo de Carnot define a eficiência máxima possível entre duas temperaturas.</p>`,
+[["1ª lei","ΔU = Q − W"],["Calor sensível","Q = m·c·ΔT"],["Trabalho isobárico","W = p·ΔV"],["Eficiência de Carnot","η = 1 − T<sub>f</sub>/T<sub>q</sub>"],["Gás ideal","pV = nRT"]],
+"Uma máquina opera entre 500 K e 300 K. Qual a eficiência máxima? Se um gás recebe 500 J e realiza 200 J de trabalho, quanto vale ΔU?",
+"η = 1 − 300/500 = <b>0,40 = 40%</b>. ΔU = 500 − 200 = <b>300 J</b>.",
+"Convenção de sinais varia entre livros (Q − W ou Q + W). Veja qual seu professor usa."],
+["ele",2,"Eletrostática","Base de capacitores, isolamento elétrico, sensores e eletrônica.",
+`<p>Cargas de mesmo sinal se repelem e de sinais opostos se atraem. A <b>lei de Coulomb</b> dá a força entre cargas pontuais e lembra a gravitação (cai com 1/r²).</p><p>O <b>campo elétrico</b> E é a força por unidade de carga — existe no espaço mesmo sem carga de teste. O <b>potencial elétrico</b> V é energia por unidade de carga; a diferença de potencial (tensão) é o que ‘empurra’ cargas.</p><p>A <b>lei de Gauss</b> relaciona o fluxo de campo à carga interna e simplifica casos simétricos. <b>Capacitores</b> armazenam carga e energia: C = Q/V.</p>`,
+[["Coulomb","F = k·|q₁q₂|/r² , k ≈ 9×10⁹ N·m²/C²"],["Campo","E = F/q = kQ/r²"],["Potencial","V = kQ/r ; ΔV = −∫E·dl"],["Capacitor","C = Q/V ; C = ε₀A/d ; U = ½CV²"]],
+"Duas cargas de 2 μC e 3 μC estão a 0,3 m. Qual a força entre elas?",
+"F = 9×10⁹ · (2×10⁻⁶ · 3×10⁻⁶)/0,09 = 9×10⁹ · 6×10⁻¹² / 0,09 = 0,054/0,09 = <b>0,6 N</b> (repulsão).",
+"Converta μC para C (×10⁻⁶) antes de tudo. É onde a maioria erra."],
+["cir",2,"Circuitos elétricos","Toda instalação, equipamento e placa eletrônica é um circuito.",
+`<p><b>Corrente</b> I é o fluxo de carga (A = C/s). <b>Lei de Ohm</b>: V = R·I. <b>Potência</b>: P = V·I.</p><p>Resistores em <b>série</b> somam (mesma corrente); em <b>paralelo</b> somam os inversos (mesma tensão). Para circuitos com várias malhas use as <b>leis de Kirchhoff</b>: nós (soma das correntes que entram = que saem) e malhas (soma das tensões numa volta = 0).</p><p>No nível avançado: circuitos RC (carga com constante de tempo τ = RC), RL, RLC e corrente alternada com impedância e fasores.</p>`,
+[["Ohm","V = R·I"],["Potência","P = V·I = R·I² = V²/R"],["Série","R<sub>eq</sub> = R₁ + R₂ + …"],["Paralelo","1/R<sub>eq</sub> = 1/R₁ + 1/R₂ + …"],["Circuito RC","v<sub>C</sub>(t) = V(1 − e<sup>−t/RC</sup>)"]],
+"Uma bateria de 12 V alimenta resistores de 4 Ω e 6 Ω. Calcule a corrente total em série e em paralelo.",
+"Série: R = 10 Ω → I = <b>1,2 A</b>. Paralelo: R = (4·6)/(4+6) = 2,4 Ω → I = <b>5 A</b>. Em paralelo, a potência total é 12·5 = 60 W.",
+"Dois resistores em paralelo: produto sobre soma. O equivalente é sempre menor que o menor resistor."],
+["mag",3,"Magnetismo e indução","Motores, geradores, transformadores e toda a geração de energia elétrica.",
+`<p>Cargas em movimento geram e sentem campos magnéticos. Uma carga em movimento num campo B sofre força F = qv×B (perpendicular à velocidade). Um fio com corrente sofre F = ILB sen θ — é o princípio do motor elétrico.</p><p>Correntes geram campo: um fio longo cria B = μ₀I/(2πr), e um solenoide cria campo uniforme no interior. A <b>lei de Ampère</b> generaliza isso.</p><p><b>Lei de Faraday</b>: variar o fluxo magnético induz tensão — é como funcionam geradores e transformadores. A <b>lei de Lenz</b> dá o sinal: a corrente induzida se opõe à variação. As quatro equações de Maxwell reúnem todo o eletromagnetismo.</p>`,
+[["Força em carga","F = qvB sen θ"],["Força em fio","F = I·L·B sen θ"],["Fio longo","B = μ₀I / 2πr , μ₀ = 4π×10⁻⁷ T·m/A"],["Faraday","ε = −N·dΦ/dt , Φ = B·A cos θ"],["Transformador","V₁/V₂ = N₁/N₂"]],
+"Qual o campo magnético a 5 cm de um fio longo com 10 A?",
+"B = (4π×10⁻⁷ · 10)/(2π · 0,05) = (2×10⁻⁷ · 10)/0,05 = <b>4×10⁻⁵ T</b> (40 μT, próximo ao campo da Terra).",
+"Regra da mão direita: polegar na corrente, dedos curvados indicam o sentido de B."],
+["mod",3,"Física moderna","Semicondutores, lasers, energia nuclear, ressonância magnética e células solares.",
+`<p>A luz se comporta também como partícula: o <b>fóton</b> tem energia E = hf. O <b>efeito fotoelétrico</b> mostra que só fótons com energia acima da função trabalho arrancam elétrons — base das células solares.</p><p>Partículas também têm comportamento de onda (comprimento de de Broglie λ = h/p). Átomos têm níveis de energia discretos: emitem ou absorvem fótons ao trocar de nível (espectros, lasers, LEDs).</p><p>A <b>relatividade</b> mostra que massa é energia (E = mc²), base da energia nuclear. O <b>decaimento radioativo</b> segue lei exponencial com meia-vida característica.</p>`,
+[["Fóton","E = h·f = hc/λ , h = 6,626×10⁻³⁴ J·s"],["Fotoelétrico","E<sub>c,máx</sub> = hf − φ"],["de Broglie","λ = h/p"],["Massa-energia","E = mc²"],["Decaimento","N = N₀e<sup>−λt</sup> ; t<sub>½</sub> = ln2/λ"]],
+"Qual a energia de um fóton de luz verde com λ = 500 nm?",
+"E = (6,626×10⁻³⁴ · 3×10⁸)/(5×10⁻⁷) ≈ <b>3,98×10⁻¹⁹ J</b>. Em elétron-volts: 3,98×10⁻¹⁹/1,6×10⁻¹⁹ ≈ <b>2,48 eV</b>.",
+"1 eV = 1,6×10⁻¹⁹ J. Atalho útil: E(eV) ≈ 1240/λ(nm)."]
+]},
+qui:{n:"Química",c:"--qui",t:[
+["mat",1,"Matéria, medidas e algarismos significativos","Relatórios de laboratório e ensaios exigem medidas bem expressas e conversões corretas.",
+`<p><b>Matéria</b> é tudo que tem massa e ocupa espaço. Pode ser substância pura (simples ou composta) ou mistura (homogênea ou heterogênea). Estados físicos: sólido, líquido, gasoso; mudanças de estado ocorrem a temperatura constante (para substâncias puras).</p><p>Propriedades <b>intensivas</b> não dependem da quantidade (densidade, ponto de fusão) e servem para identificar materiais. <b>Extensivas</b> dependem (massa, volume).</p><p><b>Algarismos significativos</b> indicam a precisão da medida: zeros à esquerda não contam; zeros após vírgula no final contam. Na multiplicação, o resultado fica com o menor número de significativos dos fatores.</p>`,
+[["Densidade","ρ = m/V"],["Notação científica","a × 10<sup>n</sup> , 1 ≤ a &lt; 10"],["Temperatura","T(K) = T(°C) + 273,15"]],
+"Quantos algarismos significativos tem 0,00450? Um bloco de 27 g ocupa 10 cm³: qual a densidade e qual metal pode ser?",
+"0,00450 = 4,50×10⁻³ → <b>3 significativos</b>. ρ = 27/10 = <b>2,7 g/cm³</b>, valor típico do alumínio.",
+"Densidade da água ≈ 1 g/cm³ = 1000 kg/m³. Bom ponto de referência para checar respostas."],
+["ato",1,"Estrutura atômica","Propriedades de materiais (condutividade, cor, reatividade) vêm de como os elétrons estão organizados.",
+`<p>O átomo tem um <b>núcleo</b> com prótons (+) e nêutrons, e uma <b>eletrosfera</b> com elétrons (−). <b>Número atômico Z</b> = prótons (define o elemento). <b>Número de massa A</b> = prótons + nêutrons. Isótopos têm mesmo Z e A diferente.</p><p>O modelo atual (quântico) distribui elétrons em níveis (1 a 7) e subníveis (s, p, d, f), com capacidade de 2, 6, 10 e 14 elétrons. A ordem de preenchimento segue o diagrama de Linus Pauling: 1s 2s 2p 3s 3p 4s 3d 4p 5s 4d…</p><p>Os <b>elétrons de valência</b> (camada mais externa) determinam como o átomo forma ligações.</p>`,
+[["Nêutrons","n = A − Z"],["Íons","cátion: perdeu e⁻ ; ânion: ganhou e⁻"],["Pauling","1s 2s 2p 3s 3p 4s 3d 4p 5s 4d 5p 6s 4f 5d …"]],
+"O ferro tem Z = 26 e A = 56. Quantos prótons, nêutrons e qual a distribuição eletrônica?",
+"<b>26 prótons, 26 elétrons e 30 nêutrons</b>. Distribuição: <span class=m>1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁶</span>. A camada de valência é a 4 (4s²).",
+"Para íons, retire elétrons primeiro da camada mais externa (no Fe²⁺, saem os 4s², não os 3d)."],
+["tab",1,"Tabela periódica e propriedades","Escolher um material começa por entender a família do elemento e suas tendências.",
+`<p>A tabela organiza os elementos por Z. <b>Períodos</b> (linhas) indicam o número de camadas; <b>grupos</b> (colunas) reúnem elementos com a mesma configuração de valência e comportamento parecido: metais alcalinos (1), alcalino-terrosos (2), halogênios (17), gases nobres (18), metais de transição (3–12).</p><p><b>Tendências periódicas</b>: o <b>raio atômico</b> cresce para baixo e para a esquerda. <b>Energia de ionização</b> e <b>eletronegatividade</b> crescem para cima e para a direita (o flúor é o mais eletronegativo).</p><p>Metais (maioria, à esquerda) conduzem eletricidade e são dúcteis; ametais (direita) tendem a ganhar elétrons; semimetais (Si, Ge) são semicondutores.</p>`,
+[["Raio atômico","↑ para baixo e para a esquerda"],["Eletronegatividade","↑ para cima e para a direita (F = 4,0)"],["Energia de ionização","↑ para cima e para a direita"]],
+"Compare sódio (Na, grupo 1) e cloro (Cl, grupo 17), ambos no 3º período.",
+"O <b>Na tem raio maior</b> e baixa energia de ionização: perde 1 elétron fácil (Na⁺). O <b>Cl é mais eletronegativo</b>: ganha 1 elétron (Cl⁻). Juntos formam o NaCl, composto iônico.",
+"No mesmo período, mais prótons puxam mais os elétrons: por isso o raio diminui para a direita."],
+["lig",1,"Ligações químicas e forças intermoleculares","O tipo de ligação explica por que metais conduzem, cerâmicas são duras e polímeros são flexíveis.",
+`<p><b>Iônica</b>: transferência de elétrons entre metal e ametal (grande diferença de eletronegatividade, &gt; ~1,7). Forma cristais duros, quebradiços, com alto ponto de fusão (ex.: NaCl, cerâmicas).</p><p><b>Covalente</b>: compartilhamento de elétrons entre ametais. Pode ser apolar ou polar. <b>Metálica</b>: ‘mar de elétrons’ livres entre cátions, explicando condutividade e ductilidade.</p><p>Entre moléculas atuam <b>forças intermoleculares</b>: dipolo induzido (fracas), dipolo-dipolo e <b>ligações de hidrogênio</b> (fortes; H ligado a F, O ou N). Elas determinam pontos de ebulição e solubilidade (‘semelhante dissolve semelhante’). A geometria molecular (VSEPR) define a polaridade.</p>`,
+[["Δ eletronegatividade","&gt; 1,7 iônica ; 0,4–1,7 covalente polar ; &lt; 0,4 apolar"],["Força intermolecular","lig. H &gt; dipolo-dipolo &gt; dipolo induzido"],["Geometrias","linear 180° ; trigonal 120° ; tetraédrica 109,5°"]],
+"Classifique as ligações em NaCl, H₂O e no ferro metálico.",
+"<b>NaCl: iônica</b> (metal + ametal). <b>H₂O: covalente polar</b>, geometria angular, e as moléculas se unem por ligações de hidrogênio (por isso ferve a 100 °C). <b>Fe: metálica</b>.",
+"Ligação de hidrogênio é força ENTRE moléculas, não é ligação covalente dentro delas."],
+["est",2,"Mol e estequiometria","Calcular quanto reagente comprar, quanto produto sai e quanto resíduo sobra num processo.",
+`<p>O <b>mol</b> é uma quantidade: 6,022×10²³ entidades (constante de Avogadro). A <b>massa molar</b> (g/mol) é a soma das massas atômicas da fórmula — a ‘ponte’ entre gramas e mols.</p><p>Uma equação <b>balanceada</b> dá a proporção em mols entre reagentes e produtos. Roteiro: gramas → mols → proporção da equação → mols → gramas.</p><p>Na prática há <b>reagente limitante</b> (acaba primeiro e define o produto) e <b>rendimento</b> menor que 100%. Pureza do reagente também entra no cálculo.</p>`,
+[["Número de mols","n = m / M"],["Avogadro","N<sub>A</sub> = 6,022×10²³ mol⁻¹"],["Rendimento","η = (real / teórico) × 100%"]],
+"Na reação <span class=m>2H₂ + O₂ → 2H₂O</span>, quantos gramas de água se formam com 4 g de H₂ (O₂ em excesso)?",
+"M(H₂) = 2 g/mol → n = 4/2 = 2 mol. A proporção H₂:H₂O é 2:2, então formam-se 2 mol de água. M(H₂O) = 18 g/mol → <b>36 g</b>.",
+"Sempre balanceie a equação primeiro. A proporção é em MOLS, nunca em gramas."],
+["sol",2,"Soluções e concentração","Tratamento de água, dosagem de reagentes, galvanoplastia e controle de processos.",
+`<p>Uma <b>solução</b> é uma mistura homogênea de soluto em solvente. A <b>concentração</b> pode ser expressa de várias formas: g/L, mol/L (molaridade), porcentagem em massa, ppm.</p><p><b>Diluição</b>: ao adicionar solvente, a quantidade de soluto não muda, só o volume. <b>Solubilidade</b> é o máximo que se dissolve a uma dada temperatura; acima disso a solução é supersaturada (instável).</p><p><b>Propriedades coligativas</b> dependem só do número de partículas dissolvidas: elevação do ponto de ebulição, abaixamento do ponto de congelamento (aditivos de radiador) e pressão osmótica (osmose reversa).</p>`,
+[["Concentração molar","C = n / V(L)"],["Concentração comum","C = m / V"],["Diluição","C₁V₁ = C₂V₂"],["ppm","1 ppm ≈ 1 mg/L (em água)"]],
+"Dissolvem-se 5,85 g de NaCl em água até 500 mL. Qual a concentração em mol/L? E se diluirmos para 2 L?",
+"M(NaCl) = 58,5 g/mol → n = 0,1 mol. C = 0,1/0,5 = <b>0,2 mol/L</b>. Diluindo: 0,2·0,5 = C₂·2 → <b>C₂ = 0,05 mol/L</b>.",
+"Volume sempre em litros na molaridade. 500 mL = 0,5 L."],
+["gas",2,"Estudo dos gases","Compressores, botijões, pneus, combustão e ar-condicionado.",
+`<p>O <b>gás ideal</b> é um modelo em que as partículas não interagem e não ocupam volume. Funciona bem em baixa pressão e alta temperatura.</p><p>As leis clássicas são casos da equação geral: <b>Boyle</b> (T constante: pV constante), <b>Charles</b> (p constante: V/T constante), <b>Gay-Lussac</b> (V constante: p/T constante). Temperatura <b>sempre em kelvin</b>.</p><p>Em misturas, cada gás contribui com sua <b>pressão parcial</b> (Dalton). Gases reais desviam do ideal em alta pressão; a equação de van der Waals corrige isso.</p>`,
+[["Clapeyron","pV = nRT"],["Constante R","0,082 atm·L/(mol·K) = 8,314 J/(mol·K)"],["Equação geral","p₁V₁/T₁ = p₂V₂/T₂"],["Dalton","p<sub>total</sub> = Σp<sub>i</sub> ; p<sub>i</sub> = x<sub>i</sub>·p<sub>total</sub>"]],
+"Qual a pressão de 2 mol de gás a 300 K num recipiente de 10 L?",
+"p = nRT/V = (2 · 0,082 · 300)/10 = <b>4,92 atm</b>.",
+"Escolha o valor de R de acordo com as unidades: atm·L ou J (Pa·m³)."],
+["tqm",2,"Termoquímica","Poder calorífico de combustíveis, projeto de fornos e balanço energético de reações.",
+`<p>Reações liberam ou absorvem calor. A <b>entalpia</b> ΔH mede o calor a pressão constante: ΔH &lt; 0 é <b>exotérmica</b> (libera calor, ex.: combustão) e ΔH &gt; 0 é <b>endotérmica</b>.</p><p>A <b>lei de Hess</b> diz que ΔH só depende dos estados inicial e final: podemos somar equações conhecidas para obter outra. Também se calcula ΔH por entalpias de formação ou energias de ligação.</p><p>Na calorimetria, o calor trocado com a água é Q = m·c·ΔT, com c da água ≈ 4,18 J/(g·°C).</p>`,
+[["Entalpia de reação","ΔH = ΣΔH<sub>f</sub>(produtos) − ΣΔH<sub>f</sub>(reagentes)"],["Energias de ligação","ΔH = Σ(quebradas) − Σ(formadas)"],["Calorimetria","Q = m·c·ΔT"]],
+"A combustão do metano libera cerca de 890 kJ/mol. Quanto calor sai de 32 g de CH₄? E quanto calor aquece 200 g de água de 20 para 70 °C?",
+"M(CH₄) = 16 g/mol → 2 mol → <b>≈1780 kJ liberados</b>. Água: Q = 200·4,18·50 = <b>41 800 J ≈ 41,8 kJ</b>.",
+"Quebrar ligação sempre absorve energia; formar ligação sempre libera."],
+["cin",3,"Cinética química","Velocidade de processos industriais, catalisadores automotivos e vida útil de produtos.",
+`<p>A <b>velocidade de reação</b> é a variação de concentração por tempo. Ela aumenta com concentração, temperatura, superfície de contato e catalisadores.</p><p>A <b>lei de velocidade</b> v = k[A]<sup>m</sup>[B]<sup>n</sup> tem ordens m e n determinadas experimentalmente (não pelos coeficientes, exceto em reações elementares). Em reações de 1ª ordem, a meia-vida é constante.</p><p>A <b>equação de Arrhenius</b> mostra que k cresce exponencialmente com a temperatura. O <b>catalisador</b> abaixa a energia de ativação sem ser consumido e sem mudar o ΔH.</p>`,
+[["Lei de velocidade","v = k[A]<sup>m</sup>[B]<sup>n</sup>"],["1ª ordem","ln[A] = ln[A]₀ − kt ; t<sub>½</sub> = ln2/k"],["Arrhenius","k = A·e<sup>−Ea/RT</sup>"]],
+"Uma reação de 1ª ordem tem k = 0,0693 min⁻¹. Qual a meia-vida e quanto resta após 30 min?",
+"t<sub>½</sub> = 0,693/0,0693 = <b>10 min</b>. 30 min = 3 meias-vidas → resta (1/2)³ = <b>12,5%</b> do inicial.",
+"Regra prática: cada +10 °C costuma dobrar ou triplicar a velocidade."],
+["eqp",3,"Equilíbrio químico, ácidos, bases e pH","Controle de efluentes, tratamento de água, concreto (pH alto protege o aço) e processos industriais.",
+`<p>No <b>equilíbrio</b>, as reações direta e inversa ocorrem na mesma velocidade e as concentrações ficam constantes. A <b>constante de equilíbrio</b> K indica se o equilíbrio favorece produtos (K grande) ou reagentes (K pequeno). Sólidos e líquidos puros não entram na expressão.</p><p><b>Le Chatelier</b>: o sistema reage para contrabalançar perturbações (concentração, pressão, temperatura).</p><p><b>pH</b> mede a acidez: pH &lt; 7 ácido, = 7 neutro, &gt; 7 básico (a 25 °C). Ácidos fortes ionizam totalmente; fracos parcialmente (K<sub>a</sub>). Soluções-tampão resistem a variações de pH.</p>`,
+[["Constante","aA + bB ⇌ cC → K<sub>c</sub> = [C]<sup>c</sup> / ([A]<sup>a</sup>[B]<sup>b</sup>)"],["pH","pH = −log[H⁺] ; pOH = −log[OH⁻]"],["Água (25 °C)","pH + pOH = 14 ; K<sub>w</sub> = 10⁻¹⁴"],["Ácido fraco","K<sub>a</sub> = [H⁺][A⁻]/[HA]"]],
+"Uma solução tem [H⁺] = 10⁻³ mol/L. Qual o pH e o pOH? E o que acontece se adicionarmos base?",
+"pH = −log 10⁻³ = <b>3</b> (ácida). pOH = 14 − 3 = <b>11</b>. Adicionar base consome H⁺, então o pH <b>sobe</b>.",
+"Cada unidade de pH é 10× mais ácido: pH 3 tem 100× mais H⁺ que pH 5."],
+["elq",3,"Eletroquímica e corrosão","Baterias, galvanoplastia e, principalmente, proteção de estruturas metálicas contra corrosão.",
+`<p>Reações de <b>oxirredução</b> envolvem transferência de elétrons: quem perde elétrons <b>oxida</b> (ânodo), quem ganha <b>reduz</b> (cátodo).</p><p>Numa <b>pilha</b>, a reação é espontânea e gera corrente. A tensão vem dos <b>potenciais padrão de redução</b>: a espécie com maior E° reduz. Na <b>eletrólise</b>, usa-se energia elétrica para forçar uma reação não espontânea (refino de cobre, alumínio, cromagem).</p><p>A <b>corrosão</b> do ferro é uma pilha natural: o ferro oxida na presença de água e O₂. Proteções: pintura (barreira), <b>galvanização</b> (zinco por cima), <b>metal de sacrifício</b> (Zn ou Mg, mais reativos, oxidam no lugar do aço) e proteção catódica por corrente impressa.</p>`,
+[["Força eletromotriz","ΔE° = E°<sub>cátodo</sub> − E°<sub>ânodo</sub>"],["Gibbs","ΔG° = −n·F·ΔE° , F = 96 485 C/mol"],["Faraday (eletrólise)","m = (M·i·t)/(n·F)"],["Nernst","E = E° − (0,0592/n)·log Q (25 °C)"]],
+"Calcule a ddp da pilha de Daniell: Cu²⁺/Cu (E° = +0,34 V) e Zn²⁺/Zn (E° = −0,76 V).",
+"O cobre tem maior E°: reduz (cátodo). O zinco oxida (ânodo). ΔE° = 0,34 − (−0,76) = <b>1,10 V</b>. Positivo → espontânea.",
+"Metal de sacrifício precisa ter potencial de redução MENOR que o metal protegido."],
+["org",2,"Química orgânica e polímeros","Combustíveis, plásticos, borrachas, tintas, adesivos e compósitos.",
+`<p>A química orgânica estuda compostos de carbono. O carbono faz 4 ligações e forma cadeias longas, ramificadas e anéis. <b>Hidrocarbonetos</b>: alcanos (só simples), alcenos (dupla), alcinos (tripla) e aromáticos (anel benzênico).</p><p>Nomenclatura: prefixo (nº de carbonos: met, et, prop, but, pent…) + infixo (an, en, in) + sufixo da função (o, ol, al, ona, oico…). <b>Funções</b> importantes: álcool (−OH), ácido carboxílico (−COOH), éster, amina, amida.</p><p><b>Polímeros</b> são macromoléculas de unidades repetidas (monômeros). Por adição: polietileno, PVC, polipropileno. Por condensação: náilon, PET, poliésteres. Termoplásticos amolecem com calor e são recicláveis; termofixos não.</p>`,
+[["Alcanos","C<sub>n</sub>H<sub>2n+2</sub>"],["Alcenos","C<sub>n</sub>H<sub>2n</sub>"],["Prefixos","1 met, 2 et, 3 prop, 4 but, 5 pent, 6 hex"],["Combustão completa","hidrocarboneto + O₂ → CO₂ + H₂O"]],
+"Dê o nome de CH₃−CH₂−CH₂−CH₃ e sua fórmula molecular. Qual polímero vem do eteno (CH₂=CH₂)?",
+"4 carbonos, só ligações simples: <b>butano</b>, C₄H₁₀ (confere com C<sub>n</sub>H<sub>2n+2</sub>). O eteno polimeriza por adição formando o <b>polietileno</b>.",
+"Conte a cadeia principal pela maior sequência de carbonos, que nem sempre está em linha reta no desenho."],
+["mtr",3,"Ciência dos materiais","Escolher o material certo para cada peça: resistência, rigidez, peso, custo e durabilidade.",
+`<p>Materiais se dividem em <b>metais</b>, <b>cerâmicas</b>, <b>polímeros</b> e <b>compósitos</b>. As propriedades vêm da ligação química e da <b>estrutura cristalina</b>: CCC (ferro α), CFC (alumínio, cobre — mais dúcteis) e HC (titânio, zinco).</p><p>No <b>ensaio de tração</b>: a tensão σ = F/A e a deformação ε = ΔL/L₀. No regime elástico vale a <b>lei de Hooke</b> (σ = Eε) e a peça volta ao tamanho original. Após o limite de escoamento, a deformação é permanente (plástica), até a ruptura.</p><p>Defeitos (discordâncias, contornos de grão) controlam a resistência. Tratamentos térmicos (têmpera, recozimento) e ligas alteram a microestrutura. O diagrama Fe–C é central para os aços.</p>`,
+[["Tensão","σ = F / A"],["Deformação","ε = ΔL / L₀"],["Hooke","σ = E·ε"],["Fator de empacotamento","CCC = 0,68 ; CFC e HC = 0,74"]],
+"Uma barra de aço (E = 200 GPa) com área 100 mm² recebe 20 kN de tração. Calcule σ e ε.",
+"σ = 20 000 N / 100×10⁻⁶ m² = <b>200 MPa</b>. ε = σ/E = 200×10⁶/200×10⁹ = <b>0,001</b> (0,1%). Uma barra de 1 m alonga 1 mm.",
+"1 MPa = 1 N/mm². Trabalhar em N e mm evita muitas potências de 10."],
+["gib",3,"Entropia e energia livre de Gibbs","Prever se uma reação ou processo acontece espontaneamente e a que temperatura.",
+`<p><b>Entropia</b> S mede a dispersão da energia e da matéria (grosso modo, a ‘desordem’). Gases têm mais entropia que líquidos, e líquidos mais que sólidos. Pela 2ª lei, a entropia do universo aumenta em processos espontâneos.</p><p>A <b>energia livre de Gibbs</b> junta entalpia e entropia num só critério a T e p constantes: ΔG &lt; 0 espontâneo, ΔG = 0 equilíbrio, ΔG &gt; 0 não espontâneo.</p><p>Como ΔG = ΔH − TΔS, a temperatura pode inverter a espontaneidade. ΔG também se relaciona com a constante de equilíbrio (ΔG° = −RT ln K) e com a tensão de uma pilha.</p>`,
+[["Gibbs","ΔG = ΔH − T·ΔS"],["Temperatura de inversão","T = ΔH / ΔS"],["Equilíbrio","ΔG° = −RT ln K"],["Sinais","ΔH &lt; 0 e ΔS &gt; 0 → sempre espontâneo"]],
+"Na síntese da amônia, ΔH = −92 kJ e ΔS = −0,199 kJ/K. É espontânea a 298 K? Até que temperatura?",
+"ΔG = −92 − 298·(−0,199) = −92 + 59,3 = <b>−32,7 kJ</b> → espontânea. Inverte em T = ΔH/ΔS = 92/0,199 ≈ <b>462 K</b>; acima disso, ΔG &gt; 0.",
+"Cuidado com unidades: ΔH costuma vir em kJ e ΔS em J/K. Converta antes."]
+]}};
+const LV=["","Básico","Intermediário","Avançado"],IC={mat:"∫",fis:"F",qui:"⚗"};
+IC.qui="H₂O";
+const SV={home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',trail:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',prog:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',chev:'<path d="M9 6l6 6-6 6"/>',prev:'<path d="M15 18l-6-6 6-6"/>'};
+const ico=(k,c="")=>`<svg class="${c}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${SV[k]}</svg>`;
+const KEY="exatas-eng-v1",LK="exatas-eng-last";let done={},last="";
+try{done=JSON.parse(localStorage.getItem(KEY)||"{}");last=localStorage.getItem(LK)||""}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(done));localStorage.setItem(LK,last)}catch(e){}};
+const all=[];for(const d in D){D[d].t.sort((a,b)=>a[1]-b[1]);D[d].t.forEach((t,i)=>all.push({d,id:d+"-"+t[0],t,i}))}
+const byId=id=>all.find(o=>o.id===id);
+const $=s=>document.getElementById(s);
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/<[^>]+>/g,"").toLowerCase();
+const cnt=d=>D[d].t.filter(t=>done[d+"-"+t[0]]).length;
+let disc="mat",route="inicio",q="";
+const app=$("app");
+
+function setDisc(d){disc=d;app.className="app d-"+d;document.querySelector('meta[name=theme-color]').content=getComputedStyle(app).getPropertyValue("--acc").trim()||"#2557d6"}
+function nav(active){$("nav").hidden=false;$("abar").hidden=true;
+$("nav").innerHTML=[["inicio","home","Início"],["trilha","trail","Trilhas"],["buscar","search","Buscar"],["progresso","prog","Progresso"]].map(([r,i,l])=>`<button data-r="${r}" ${active===r?'aria-current="page"':""}>${ico(i)}${l}</button>`).join("")}
+function top(t,sub,back){$("ttl").innerHTML=t+(sub?`<small>${sub}</small>`:"");$("back").hidden=!back;$("ttl").style.paddingInlineStart=back?"0":"10px"}
+function nextFor(d){return all.find(o=>o.d===d&&!done[o.id])||all.find(o=>o.d===d)}
+
+let deferred=null;
+const standalone=()=>(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;if(route==="inicio")render()});
+addEventListener("appinstalled",()=>{deferred=null;toast("App instalado!")});
+function installCard(){if(!window.PWA||standalone())return "";
+ if(deferred)return `<div class="sec">Instalar</div><div class="pl"><p style="margin:0 0 12px">Instale o app no celular para abrir pelo ícone e estudar sem internet.</p><button class="rev" id="install">Instalar app</button></div>`;
+ if(isIOS)return `<div class="sec">Instalar</div><div class="pl"><p style="margin:0">No Safari, toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>.</p></div>`;
+ return ""}
+function home(){top("Exatas para Engenharia","Matemática · Física · Química");nav("inicio");
+const tot=all.length,c=Object.keys(done).filter(byId).length,pct=Math.round(c/tot*100),R=46,L=2*Math.PI*R;
+const cont=byId(last)||all.find(o=>!done[o.id])||all[0];setDisc(cont.d);
+const day=all[Math.floor(Date.now()/864e5)%all.length];
+return `<section class="hero"><div class="ring"><svg viewBox="0 0 108 108"><circle cx="54" cy="54" r="${R}" fill="none" stroke="var(--line)" stroke-width="10"/><circle cx="54" cy="54" r="${R}" fill="none" stroke="var(--acc)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L*(1-c/tot)}"/></svg><b>${pct}%<small>${c}/${tot}</small></b></div>
+<div><h2>${c?"Continue assim!":"Bons estudos!"}</h2><p>${c?`Você já estudou ${c} de ${tot} assuntos.`:"Comece pelo básico e avance no seu ritmo, do zero ao avançado."}</p></div></section>
+${installCard()}<div class="sec">Continuar estudando</div>
+<button class="cont" data-open="${cont.id}"><span class="tx"><small>${D[cont.d].n} · ${LV[cont.t[1]]}</small><b>${cont.t[2]}</b></span><span class="go">${ico("chev")}</span></button>
+<div class="sec">Disciplinas <a data-r="trilha">Ver trilhas</a></div>
+<div class="dcards">${Object.keys(D).map(d=>{const n=D[d].t.length,k=cnt(d);return `<button class="dc d-${d}" data-disc="${d}"><span class="ic">${IC[d]}</span><span><b>${D[d].n}</b><small>${k} de ${n} assuntos</small><div class="bar"><i style="width:${k/n*100}%"></i></div></span><span class="pc">${Math.round(k/n*100)}%</span></button>`}).join("")}</div>
+<div class="sec">Fórmula do dia</div>
+<button class="daily d-${day.d}" data-open="${day.id}" style="width:100%;text-align:start"><small>${D[day.d].n} · ${day.t[2]}</small><p style="color:var(--soft);font-size:14px">${day.t[5][0][0]}</p><p class="m" style="font-size:20px">${day.t[5][0][1]}</p></button>`}
+
+function trail(){top("Trilhas","Do básico ao avançado");nav("trilha");setDisc(disc);
+const ds=all.filter(o=>o.d===disc),k=cnt(disc),nx=nextFor(disc);
+let h=`<div class="seg">${Object.keys(D).map(d=>`<button data-seg="${d}" aria-pressed="${d===disc}">${D[d].n}</button>`).join("")}</div>
+<div class="sum"><span>${k} de ${ds.length} estudados</span><span>${Math.round(k/ds.length*100)}%</span></div><div class="bar"><i style="width:${k/ds.length*100}%"></i></div>`;
+for(let l=1;l<=3;l++){const g=ds.filter(o=>o.t[1]===l);if(!g.length)continue;
+h+=`<div class="lvl">${LV[l]} <span>${g.filter(o=>done[o.id]).length}/${g.length}</span></div><div class="trail">${g.map(o=>`<button class="node ${o===nx&&!done[o.id]?"cur":""}" data-open="${o.id}"><span class="dot ${done[o.id]?"ok":""}">${done[o.id]?"✓":o.i+1}</span><b>${o.t[2]}${o===nx&&!done[o.id]?"<small>Próximo passo</small>":""}</b>${ico("chev","chev")}</button>`).join("")}</div>`}
+return h}
+
+function lesson(o){setDisc(o.d);last=o.id;save();
+const [k,lv,ti,why,ex,fx,qq,a,tip]=o.t,seq=all.filter(x=>x.d===o.d),i=seq.indexOf(o),p=seq[i-1],n=seq[i+1];
+top(D[o.d].n,`${LV[lv]} · ${i+1} de ${seq.length}`,true);$("nav").hidden=true;const ab=$("abar");ab.hidden=false;
+ab.innerHTML=`<button aria-label="Assunto anterior" ${p?`data-open="${p.id}"`:"disabled"}>${ico("prev")}</button><button class="mk ${done[o.id]?"on":""}" id="mk">${done[o.id]?"✓ Estudado":"Marcar como estudado"}</button><button aria-label="Próximo assunto" ${n?`data-open="${n.id}"`:"disabled"}>${ico("chev")}</button>`;
+return `<div class="lhead"><div class="chips"><span class="chip">${LV[lv]}</span><span class="chip p">${D[o.d].n}</span></div><h2>${ti}</h2><p><b>Por que importa:</b> ${why}</p></div>
+<div class="steps"><a data-sc="s1">Explicação</a><a data-sc="s2">Fórmulas</a><a data-sc="s3">Exemplo</a><a data-sc="s4">Dica</a></div>
+<section class="card" id="s1"><h3>Explicação</h3>${ex}</section>
+<section class="card" id="s2"><h3>Fórmulas essenciais</h3><div class="fx">${fx.map((f,j)=>`<div><button class="cp" data-cp="${j}">Copiar</button><span>${f[0]}</span><code>${f[1]}</code></div>`).join("")}</div></section>
+<section class="card" id="s3"><h3>Exemplo resolvido</h3><p class="qbox"><b>Problema:</b> ${qq}</p><button class="rev" id="rev" aria-expanded="false">Tentei! Mostrar resolução</button><div class="sol" id="sol" hidden>${a}</div></section>
+<section class="card tip" id="s4"><h3>Dica</h3><p>${tip}</p></section>
+${n?`<button class="cont" data-open="${n.id}" style="margin-top:6px"><span class="tx"><small>Próximo assunto</small><b>${n.t[2]}</b></span><span class="go">${ico("chev")}</span></button>`:""}`}
+
+function results(){if(!q)return `<div class="hint">${["derivada","integral","torque","circuito","pH","corrosão","gases","matriz"].map(w=>`<button data-hint="${w}">${w}</button>`).join("")}</div>`;
+const r=all.filter(o=>norm(o.t[2]+" "+o.t[3]+" "+o.t[4]+" "+o.t[5].map(f=>f[0]).join(" ")).includes(q));
+return r.length?`<div class="sum" style="margin-bottom:10px"><span>${r.length} ${r.length===1?"resultado":"resultados"}</span></div><div class="trail" style="--x:0">${r.map(o=>`<button class="node d-${o.d}" data-open="${o.id}"><span class="dot ${done[o.id]?"ok":""}" style="color:var(--acc);border-color:var(--acc)">${done[o.id]?"✓":IC[o.d].slice(0,1)}</span><b>${o.t[2]}<small>${D[o.d].n} · ${LV[o.t[1]]}</small></b>${ico("chev","chev")}</button>`).join("")}</div>`:`<div class="empty">Nada encontrado para essa busca.<br>Tente outro termo, como “derivada” ou “pH”.</div>`}
+function search(){top("Buscar","Todos os assuntos");nav("buscar");
+return `<div class="sbox"><input id="q" type="search" placeholder="Ex.: integral, torque, pH" aria-label="Buscar assunto" autocomplete="off"></div><div id="res">${results()}</div>`}
+
+function prog(){top("Progresso","Seu andamento");nav("progresso");
+const c=Object.keys(done).filter(byId).length,lvc=l=>all.filter(o=>o.t[1]===l&&done[o.id]).length;
+return `<div class="stat"><div><b>${c}</b><small>estudados</small></div><div><b>${all.length-c}</b><small>faltam</small></div><div><b>${Math.round(c/all.length*100)}%</b><small>do total</small></div></div>
+<div class="sec">Por disciplina</div>${Object.keys(D).map(d=>{const ds=all.filter(o=>o.d===d);return `<div class="pl d-${d}"><header><span>${D[d].n}</span><span style="color:var(--acc)">${cnt(d)}/${ds.length}</span></header>${[1,2,3].map(l=>{const g=ds.filter(o=>o.t[1]===l),k=g.filter(o=>done[o.id]).length;return g.length?`<div class="lv"><span>${LV[l]}</span><div class="bar"><i style="width:${k/g.length*100}%"></i></div><span>${k}/${g.length}</span></div>`:""}).join("")}</div>`}).join("")}
+<div class="sec">Levar o progresso para outro aparelho</div>
+<div class="pl"><p style="margin:0 0 10px;font-size:15px;color:var(--soft)">Copie o código e cole no outro aparelho, nesta mesma tela.</p>
+<button class="rev" id="bkcopy">Copiar código de backup</button>
+<label for="bkin" style="display:block;font-size:14px;font-weight:600;margin:14px 0 6px">Colar código</label>
+<div style="display:flex;gap:8px"><input id="bkin" autocomplete="off" spellcheck="false" style="flex:1;font-size:16px;padding:12px 14px;border:1px solid var(--edge);border-radius:var(--r1);background:var(--card);min-height:48px"><button class="danger" id="bkload" style="width:auto;margin:0;padding:0 18px;color:var(--ink);font-weight:600">Restaurar</button></div></div>
+<button class="danger" id="reset">Zerar progresso</button>`}
+
+function render(){const h=location.hash.slice(1)||"inicio",o=byId(h);route=h;let html;
+if(o)html=lesson(o);else if(h==="trilha"||h.startsWith("trilha-")){if(D[h.slice(7)])disc=h.slice(7);html=trail()}
+else if(h==="buscar")html=search();else if(h==="progresso"){setDisc(disc);html=prog()}else{route="inicio";html=home()}
+const v=$("view");v.style.animation="none";v.offsetHeight;v.style.animation="";v.innerHTML=html;window.scrollTo(0,0);
+if(h==="buscar"){const i=$("q");i.value=q;i.addEventListener("input",e=>{q=norm(e.target.value.trim());$("res").innerHTML=results()})}}
+const go=h=>{if(location.hash.slice(1)===h)render();else location.hash=h};
+function toast(t){const e=document.createElement("div");e.className="toast";e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1600)}
+
+app.addEventListener("click",e=>{const t=e.target;
+ const op=t.closest("[data-open]");if(op){go(op.dataset.open);return}
+ const r=t.closest("[data-r]");if(r){go(r.dataset.r==="trilha"?"trilha-"+disc:r.dataset.r);return}
+ const dc=t.closest("[data-disc]");if(dc){disc=dc.dataset.disc;go("trilha-"+disc);return}
+ const sg=t.closest("[data-seg]");if(sg){disc=sg.dataset.seg;history.replaceState(null,"","#trilha-"+disc);render();return}
+ const sc=t.closest("[data-sc]");if(sc){$(sc.dataset.sc).scrollIntoView({behavior:"smooth",block:"start"});return}
+ const hi=t.closest("[data-hint]");if(hi){$("q").value=hi.dataset.hint;q=norm(hi.dataset.hint);$("res").innerHTML=results();return}
+ const cp=t.closest("[data-cp]");if(cp){const txt=cp.parentElement.querySelector("code").textContent;try{navigator.clipboard.writeText(txt).then(()=>toast("Fórmula copiada"),()=>toast("Não foi possível copiar"))}catch(_){toast("Não foi possível copiar")}return}
+ if(t.closest("#back")){const o=byId(route);go(o?"trilha-"+o.d:"inicio");return}
+ if(t.closest("#rev")){const s=$("sol"),b=$("rev"),h=s.hidden;s.hidden=!h;b.textContent=h?"Ocultar resolução":"Tentei! Mostrar resolução";b.setAttribute("aria-expanded",h);return}
+ if(t.closest("#mk")){const o=byId(route);if(done[o.id])delete done[o.id];else{done[o.id]=1;toast("Boa! Assunto concluído")}save();const b=$("mk");b.className="mk "+(done[o.id]?"on":"");b.textContent=done[o.id]?"✓ Estudado":"Marcar como estudado";return}
+ if(t.closest("#bkcopy")){const code="EXT1."+btoa(Object.keys(done).filter(byId).join(","));try{navigator.clipboard.writeText(code).then(()=>toast("Código copiado"),()=>{$("bkin").value=code;toast("Copie o código no campo")})}catch(_){$("bkin").value=code;toast("Copie o código no campo")}return}
+ if(t.closest("#bkload")){const v=$("bkin").value.trim();let ids=[];try{if(!v.startsWith("EXT1."))throw 0;ids=atob(v.slice(5)).split(",").filter(byId)}catch(_){toast("Código inválido");return}
+  ids.forEach(i=>done[i]=1);save();render();toast(ids.length+(ids.length===1?" assunto restaurado":" assuntos restaurados"));return}
+ if(t.closest("#install")){if(deferred){deferred.prompt();deferred.userChoice.finally(()=>{deferred=null;render()})}return}
+ if(t.closest("#reset")){const s=document.createElement("div");s.className="sheet";s.innerHTML=`<div role="dialog" aria-modal="true"><h3>Zerar progresso?</h3><p>Todos os assuntos voltam a ficar como não estudados.</p><div class="row"><button data-no>Cancelar</button><button class="yes" data-yes>Zerar</button></div></div>`;document.body.appendChild(s);
+  s.addEventListener("click",ev=>{if(ev.target.closest("[data-yes]")){done={};save();render();toast("Progresso zerado")}if(ev.target===s||ev.target.closest("[data-no],[data-yes]"))s.remove()});return}
+});
+addEventListener("hashchange",render);
+addEventListener("keydown",e=>{const o=byId(route);if(!o||e.target.tagName==="INPUT")return;const seq=all.filter(x=>x.d===o.d),i=seq.indexOf(o);
+ if(e.key==="ArrowRight"&&seq[i+1])go(seq[i+1].id);if(e.key==="ArrowLeft"&&seq[i-1])go(seq[i-1].id)});
+render();
+}
+</script>
+</body>
+</html>
